@@ -373,11 +373,13 @@ public class cashier {
             System.out.println("Pelanggan tidak mendapatkan kupon!");
         }
 
+        System.out.println("Total Pembayaran\t: " + totalBayar);
         if (sistemBayar == 1 || sistemBayar == 2) {
             bayar = totalBayar;
         } else {
             do {
                 try {
+                    System.out.print("Masukkan jumlah uang yang dibayarkan : ");
                     bayar = sc.nextInt();
                     sc.nextLine();
                 } catch (InputMismatchException e) {
