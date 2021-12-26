@@ -60,8 +60,8 @@ public class cashier {
     /**
      * dataCafetaria[n][0] = jumlah makanan / minuman yang dibeli,
      * dataCafetaria[n][1] = total makanan / minuman yang dibeli,
-     * dataCafetaria[n][2] = harga makanan / minuman, dataCafetaria[n][3] = total
-     * harga makanan / minuman
+     * dataCafetaria[n][2] = harga makanan / minuman, 
+     * dataCafetaria[n][3] = total harga makanan / minuman
      */
     public static String pesananFilmFix[][] = {
             { "", "" },
@@ -92,7 +92,6 @@ public class cashier {
 
     public static String tanggal = dateNow.getDayOfMonth() + "-" + dateNow.getMonthValue()
             + "-" + dateNow.getYear();
-    public static String makananTerbeli[][] = new String[2][3];
     public static String filmHariIni[] = new String[3];
     public static int hargaFilm[] = new int[3];
 
@@ -178,8 +177,7 @@ public class cashier {
             }
             break;
         }
-        pesananFilmFix[pilihFilm - 1][0] = filmHariIni[pilihFilm - 1];
-
+        
         while (true) {
             printKursi(studio[pilihFilm - 1]);
             System.out.println("Ketik 0 untuk kembali ke menu utama");
@@ -187,10 +185,11 @@ public class cashier {
             pilihKursi = sc.nextLine();
             if (pilihKursi.equals("0")) {
                 break;
-            } else if (chairValidation(pilihKursi.toUpperCase())) {
+            } else if (chairValidation(pilihKursi.toUpperCase(), studio[pilihFilm - 1])) {
+                pesananFilmFix[pilihFilm - 1][0] = filmHariIni[pilihFilm - 1];
                 pesananFilmFix[pilihFilm - 1][1] += cariKursi(studio[pilihFilm - 1], pilihKursi,
                         hargaFilm[pilihFilm - 1]) + " ";
-                System.out.println("\nKursi " + pilihKursi.toUpperCase() + " berhasil dipesan");
+                
                 System.out.println();
             } else {
                 System.out.println("\nInput salah, silahkan ulangi lagi");
@@ -226,11 +225,11 @@ public class cashier {
         for (int i = 0; i < namaStudio.length; i++) {
             for (int j = 0; j < namaStudio[0].length; j++) {
                 if (namaStudio[i][j].equalsIgnoreCase(kursi)) {
+                    System.out.println("\nKursi " + kursi.toUpperCase() + " berhasil dipesan");
                     kursiDipilih += kursi + "";
                     namaStudio[i][j] = "O";
                     totalPembelian += harga;
-
-                }
+                } 
             }
 
         }
@@ -238,15 +237,22 @@ public class cashier {
     }
 
     // Fitur 2.4 - Validasi Kursi
-    public static boolean chairValidation(String input) {
+    public static boolean chairValidation(String input, String[][] studio) {
 
-        if ((input.contains("A") || input.contains("B") || input.contains("C") || input.contains("D"))
+        for (int i = 0; i < studio.length; i++) {
+            for (int j = 0; j < studio[0].length; j++) {
+                if (studio[i][j].equalsIgnoreCase(input)) {
+                    if ((input.contains("A") || input.contains("B") || input.contains("C") || input.contains("D"))
                 && (input.contains("1") || input.contains("2") || input.contains("3") || input.contains("4"))
                 && input.length() == 2) {
             return true;
         } else {
             return false;
         }
+                }
+            }
+        }
+        return false;
     }
 
     // Fitur 3 - Pencarian Film
@@ -362,13 +368,12 @@ public class cashier {
             totalBayar -= diskon;
         } else if (sistemBayar == 3) {
             System.out.println("Pelanggan tidak mendapatkan diskon");
-        } else {
-            System.out.println("Input salah, silahkan ulangi lagi");
-        }
+        } 
 
         if (coupon()) {
             System.out.println("Pelanggan mendapatkan kupon potongan sebesar Rp10000!");
             totalBayar -= 10000;
+            diskon += 10000;
         } else {
             System.out.println("Pelanggan tidak mendapatkan kupon!");
         }
@@ -396,7 +401,7 @@ public class cashier {
 
         // Tampilkan film yang dipesan dan kursi yang dipilih
         for (int i = 0; i < pesananFilmFix.length; i++) {
-            if (pesananFilmFix[i][0] != "") {
+            if (pesananFilmFix[i][0] != "" && pesananFilmFix[i][1].split(" ").length * hargaFilm[i] != 0) {
                 System.out.println(pesananFilmFix[i][0]);
                 System.out.println(">> Kursi\t: " + pesananFilmFix[i][1].toUpperCase());
                 System.out.println(">> Harga\t: " + hargaFilm[i]);
@@ -584,4 +589,5 @@ public class cashier {
         totalPembelianCafe = total;
         System.out.println("Total Pembelian Cafe\t\t: " + totalPembelianCafe);
     }
+
 }
